@@ -1,0 +1,76 @@
+---
+import Layout from "@layouts/Layout.astro";
+import BlogCard from "@components/BlogCard.astro";
+//import Subscribe from "@components/Subscribe.astro";
+import { Icon } from "astro-icon";
+
+interface Frontmatter {
+  title: string;
+  pubDate: string;
+  description: string;
+}
+
+let blogs = await Astro.glob<Frontmatter>("./posts/*.mdx");
+blogs = blogs.sort(
+  (a, b) =>
+    new Date(b.frontmatter.pubDate).valueOf() -
+    new Date(a.frontmatter.pubDate).valueOf()
+);
+---
+
+<Layout
+  title="Owen Griffiths"
+  description="This is a my personal website -- Owen Griffiths"
+>
+  <section class="flex flex-col sm:flex-row justify-evenly items-center py-14">
+    <div class="w-32 m-5 md:m-10">
+      <Icon
+        name="ic:twotone-sports-martial-arts"
+        class="w-32 overflow-hidden inline-flex"
+      />
+    </div>
+    <header class="max-w-xl sm:order-first">
+      <h1 class="text-4xl mb-10 md:mb-5 text-center sm:text-left">
+        Hey There!
+      </h1>
+      <p class="text-black dark:text-zinc-300 mb-5">
+        I’m Owen. I work as an Associate Engineer, and I’m currently studying CS
+        at RMIT. I enjoy solving real-world problems. I have interests in
+        Machine Learning and full-stack development
+      </p>
+      <p class="text-black dark:text-zinc-300">
+        I’m a bit of an adrenaline junkie and thrive doing physical activities
+        such as lacrosse, running, bouldering and going to the gym
+      </p>
+    </header>
+  </section>
+  <section class="py-14">
+    <h1 class="text-3xl mb-5">Recent Posts</h1>
+    <p class="text-black dark:text-zinc-300 mb-2">
+      Looking for all of my blog posts? Click the "posts" or the "Show more
+      posts" link down below.
+    </p>
+    <ul class="flex flex-col justify-center py-5">
+      {
+        blogs.length > 1 &&
+          blogs
+            .slice(0, 2)
+            .map((post) => (
+              <BlogCard
+                title={post.frontmatter.title}
+                description={post.frontmatter.description}
+                pubDate={post.frontmatter.pubDate}
+                url={post.url}
+              />
+            ))
+      }
+    </ul>
+    <div class="text-center dark:text-zinc-300 text-zinc-200 mt-5">
+      <a
+        href="/posts"
+        class="p-3 rounded-lg dark:bg-zinc-800 bg-zinc-200 dark:text-zinc-300 text-black p-4 ring-2 ring-opacity-0 ring-zinc-500 focus:ring-opacity-100 transition-all motion-reduce:transition-none"
+        >Show more posts</a
+      >
+    </div>
+  </section>
+</Layout>
